@@ -43,8 +43,8 @@ RUN chgrp -R 0 /usr/local/lib/python3.7/ && \
     chmod -R g=u /usr/local/lib/python3.7/ && \
     chgrp -R 0 /tmp/ && \
     chmod -R g=u /tmp/  && \
-    chgrp -R 0  /usr/local/lib/python3.7/site-packages/pyspark/conf/spark-defaults.conf && \
-    chmod -R g=u  /usr/local/lib/python3.7/site-packages/pyspark/conf/spark-defaults.conf
+    chgrp -R 0  /usr/local/ && \
+    chmod -R g=u  /usr/local/
 
 
 RUN for path in "$NSS_WRAPPER_PASSWD" "$NSS_WRAPPER_GROUP"; do \
