@@ -10,34 +10,33 @@ RUN apt-get update && apt-get install -y \
     openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
-# build nss_wrapper
+COPY requirements.txt /app/python/requirements.txt
+COPY install-pyrequirements.sh .
+RUN /install-pyrequirements.sh
+
 RUN git clone git://git.samba.org/nss_wrapper.git /tmp/nss_wrapper && \
     mkdir /tmp/nss_wrapper/build && \
     cd /tmp/nss_wrapper/build && \
-    cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DLIB_SUFFIX=64 .. && \
+    cmake -DCMAKE_INSTALL_PREFIX=/root/.local -DLIB_SUFFIX=64 .. && \
     make && \
     make install && \
     rm -rf /tmp/nss_wrapper
 
-COPY requirements.txt /app/python/requirements.txt
-COPY install-pyrequirements.sh .
-RUN ./install-pyrequirements.sh
 
 FROM base
 COPY --from=builder /root/.local /root/.local
-COPY --from=builder /usr/local /usr/local
 
 COPY install-packages.sh .
-RUN ./install-packages.sh
+RUN /install-packages.sh
 
-ADD spark-defaults.conf /usr/local/lib/python3.7/site-packages/pyspark/conf/
+ADD spark-defaults.conf /root/.local/lib/python3.7/site-packages/pyspark/conf/spark-defaults.conf
   
 ENV USER_NAME=root \
     NSS_WRAPPER_PASSWD=/tmp/passwd \
     NSS_WRAPPER_GROUP=/tmp/group \
     PATH=/root/.local/bin:/usr/lib/jvm/java-8-openjdk-amd64/bin:${PATH} \
     HOME=/tmp \
-    SPARK_HOME=/usr/local/lib/python3.7/site-packages/pyspark
+    SPARK_HOME=/root/.local/lib/python3.7/site-packages/pyspark
 
 RUN chgrp -R 0 /usr/local/lib/python3.7/ && \
     chmod -R g=u /usr/local/lib/python3.7/ && \
