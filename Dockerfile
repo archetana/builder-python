@@ -1,5 +1,8 @@
 FROM python:3.7-slim-buster
 
+apt-get update && \
+apt-get install g++ unixodbc-dev
+
 COPY install-packages.sh .
 RUN ./install-packages.sh
 
