@@ -36,7 +36,8 @@ ENV USER_NAME=root \
     NSS_WRAPPER_GROUP=/tmp/group \
     PATH=/root/.local/bin:/usr/lib/jvm/java-8-openjdk-amd64/bin:${PATH} \
     HOME=/tmp \
-    SPARK_HOME=/root/.local/lib/python3.7/site-packages/pyspark
+    SPARK_HOME=/root/.local/lib/python3.7/site-packages/pyspark \
+    PYTHONPATH=/root/.local/lib/python3.7/site-packages
 
 RUN chgrp -R 0 /usr/local/lib/python3.7/ && \
     chmod -R g=u /usr/local/lib/python3.7/ && \
