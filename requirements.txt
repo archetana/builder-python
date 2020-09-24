@@ -1,0 +1,15 @@
+pyhocon
+dill
+apispec
+pyspark==2.4.4
+mysql-connector-python
+scp
+nltk
+pycryptodome
+pyenchant
+xmltodict
+dagster==0.7.16
+paramiko
+mleap
+pmdarima
+mlflow
