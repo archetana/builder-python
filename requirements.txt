@@ -13,3 +13,5 @@ paramiko
 mleap
 pmdarima
 mlflow
+zeep
+pyodbc 
