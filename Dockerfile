@@ -42,8 +42,8 @@ ENV USER_NAME=root \
 
 RUN chgrp -R 0 /usr/local/lib/python3.7/ && \
     chmod -R g=u /usr/local/lib/python3.7/ && \
-    chgrp -R 0 /root/.local/ && \
-    chmod -R g=u /root/.local/ && \
+    chgrp -R 0 /root/ && \
+    chmod -R g=u /root/ && \
     chgrp -R 0 /tmp/ && \
     chmod -R g=u /tmp/  && \
     chgrp -R 0  /usr/local/ && \
