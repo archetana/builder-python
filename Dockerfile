@@ -26,6 +26,7 @@ RUN git clone git://git.samba.org/nss_wrapper.git /tmp/nss_wrapper && \
 FROM base
 COPY --from=builder /usr/local/lib64/lib /usr/local/lib
 COPY --from=builder /usr/local/lib/python3.7/site-packages /usr/local/lib/python3.7/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY install-packages.sh .
 RUN /install-packages.sh
@@ -40,11 +41,7 @@ ENV USER_NAME=root \
     SPARK_HOME=/usr/local/lib/python3.7/site-packages/pyspark \
     PYTHONPATH=/usr/local/lib/python3.7/site-packages
 
-RUN chgrp -R 0 /usr/local/lib/python3.7/ && \
-    chmod -R g=u /usr/local/lib/python3.7/ && \
-    chgrp -R 0 /root/ && \
-    chmod -R g=u /root/ && \
-    chgrp -R 0 /tmp/ && \
+RUN chgrp -R 0 /tmp/ && \
     chmod -R g=u /tmp/  && \
     chgrp -R 0  /usr/local/ && \
     chmod -R g=u  /usr/local/
