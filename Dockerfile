@@ -31,7 +31,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY install-packages.sh .
 RUN /install-packages.sh
 
-ADD spark-defaults.conf /root/.local/lib/python3.7/site-packages/pyspark/conf/spark-defaults.conf
+ADD spark-defaults.conf /usr/local/lib/site-packages/pyspark/conf/spark-defaults.conf
   
 ENV USER_NAME=root \
     NSS_WRAPPER_PASSWD=/tmp/passwd \
