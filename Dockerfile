@@ -25,7 +25,7 @@ RUN git clone git://git.samba.org/nss_wrapper.git /tmp/nss_wrapper && \
 
 FROM base
 COPY --from=builder /usr/local/lib64/lib /usr/local/lib
-COPY --from=builder /root/.local /root/.local
+COPY --from=builder /usr/local/lib/python3.7/site-packages /usr/local/lib/python3.7/site-packages
 
 COPY install-packages.sh .
 RUN /install-packages.sh
@@ -35,10 +35,10 @@ ADD spark-defaults.conf /root/.local/lib/python3.7/site-packages/pyspark/conf/sp
 ENV USER_NAME=root \
     NSS_WRAPPER_PASSWD=/tmp/passwd \
     NSS_WRAPPER_GROUP=/tmp/group \
-    PATH=/root/.local/bin:/usr/lib/jvm/java-8-openjdk-amd64/bin:${PATH} \
+    PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:${PATH} \
     HOME=/tmp \
-    SPARK_HOME=/root/.local/lib/python3.7/site-packages/pyspark \
-    PYTHONPATH=/root/.local/lib/python3.7/site-packages
+    SPARK_HOME=/usr/local/lib/python3.7/site-packages/pyspark \
+    PYTHONPATH=/usr/local/lib/python3.7/site-packages
 
 RUN chgrp -R 0 /usr/local/lib/python3.7/ && \
     chmod -R g=u /usr/local/lib/python3.7/ && \
