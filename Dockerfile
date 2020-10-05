@@ -1,13 +1,15 @@
 FROM python:3.7-slim-buster as base
 FROM base as builder
 
-RUN apt-get update && apt-get install -y \
+RUN sed -i '/messagebus /d' /var/lib/dpkg/statoverride && \
+    apt-get update && apt-get install -y \
     g++ \
     unixodbc-dev \
     build-essential \
     cmake \
     git \
     openssh-client \
+    libenchant1c2a \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/python/requirements.txt
@@ -31,7 +33,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY install-packages.sh .
 RUN /install-packages.sh
 
-ADD spark-defaults.conf /usr/local/lib/site-packages/pyspark/conf/spark-defaults.conf
+ADD spark-defaults.conf /usr/local/lib/python3.7/site-packages/pyspark/conf/spark-defaults.conf
   
 ENV USER_NAME=root \
     NSS_WRAPPER_PASSWD=/tmp/passwd \
