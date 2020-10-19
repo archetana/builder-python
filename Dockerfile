@@ -5,6 +5,7 @@ RUN sed -i '/messagebus /d' /var/lib/dpkg/statoverride && \
     apt-get update && apt-get install -y \
     g++ \
     unixodbc-dev \
+    mssql-tools unixodbc-dev \
     build-essential \
     cmake \
     git \
