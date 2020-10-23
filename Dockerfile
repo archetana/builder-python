@@ -3,15 +3,22 @@ FROM base as builder
 
 RUN sed -i '/messagebus /d' /var/lib/dpkg/statoverride && \
     apt-get update && apt-get install -y \
+    curl \
     g++ \
+    wget \
     unixodbc-dev \
-    mssql-tools unixodbc-dev \
     build-essential \
     cmake \
     git \
     openssh-client \
     libenchant1c2a \
     && rm -rf /var/lib/apt/lists/*
+
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+# install SQL Server tools
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
 COPY requirements.txt /app/python/requirements.txt
 COPY install-pyrequirements.sh .
@@ -33,6 +40,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/bin/ /usr/bin
 COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=builder /usr/share /usr/share
+COPY --from=builder /opt /opt
 
 
 COPY install-packages.sh .
@@ -58,5 +66,9 @@ RUN for path in "$NSS_WRAPPER_PASSWD" "$NSS_WRAPPER_GROUP"; do \
   touch $path && chmod 666 $path ; done
 
 COPY nss-wrap.sh /nss-wrap.sh
+
+RUN chmod +rwx /etc/ssl/openssl.cnf && \
+    sed -i 's/TLSv1.2/TLSv1/g' /etc/ssl/openssl.cnf && \
+    sed -i 's/SECLEVEL=2/SECLEVEL=1/g' /etc/ssl/openssl.cnf
 
 ENTRYPOINT ["/nss-wrap.sh"]
