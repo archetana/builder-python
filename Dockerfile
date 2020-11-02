@@ -2,7 +2,8 @@ FROM python:3.7-slim-buster as base
 FROM base as builder
 
 RUN sed -i '/messagebus /d' /var/lib/dpkg/statoverride && \
-    apt-get update && apt-get install -y \
+    apt-get update && apt-get install -y --no-install-recommends\
+    ca-certificates \
     curl \
     g++ \
     wget \
@@ -12,7 +13,18 @@ RUN sed -i '/messagebus /d' /var/lib/dpkg/statoverride && \
     git \
     openssh-client \
     libenchant1c2a \
-    && rm -rf /var/lib/apt/lists/*
+    && curl \
+        -L \
+        -o openjdk.tar.gz \
+        https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_linux-x64_bin.tar.gz \
+    && mkdir jdk \
+    && tar zxf openjdk.tar.gz -C jdk --strip-components=1 \
+    && rm -rf openjdk.tar.gz \
+    && ln -sf /opt/jdk/bin/* /usr/local/bin/ \
+    && rm -rf /var/lib/apt/lists/* \
+    && java  --version \
+    && javac --version \
+    && jlink --version
 
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
@@ -42,16 +54,11 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
 COPY --from=builder /usr/share /usr/share
 COPY --from=builder /opt /opt
 
-
-COPY install-packages.sh .
-RUN /install-packages.sh
-
 ADD spark-defaults.conf /usr/local/lib/python3.7/site-packages/pyspark/conf/spark-defaults.conf
   
 ENV USER_NAME=root \
     NSS_WRAPPER_PASSWD=/tmp/passwd \
     NSS_WRAPPER_GROUP=/tmp/group \
-    PATH=/usr/lib/jvm/java-8-openjdk-amd64/bin:${PATH} \
     HOME=/tmp \
     SPARK_HOME=/usr/local/lib/python3.7/site-packages/pyspark \
     PYTHONPATH=/usr/local/lib/python3.7/site-packages
