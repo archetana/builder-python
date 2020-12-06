@@ -23,8 +23,7 @@ export LANG=C.UTF-8
 && chmod +x /usr/local/bin/docker-java-home
 
 export JAVA_HOME=/usr/lib/jvm/java-8-openjre-amd64
-export JAVA_VERSION=8u252
-export JAVA_DEBIAN_VERSION=8u265-b01-0+deb9u1
+export JAVA_DEBIAN_VERSION=8u275-b01-1 
 
 export CA_CERTIFICATES_JAVA_VERSION=20190405
 
