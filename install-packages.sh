@@ -7,8 +7,6 @@ apt-get update && apt-get install -y --no-install-recommends \
   xz-utils &&
   rm -rf /var/lib/apt/lists/*
 
-echo 'deb http://httpredir.debian.org/debian-security stretch/updates main' >/etc/apt/sources.list.d/jessie-backports.list
-
 # Default to UTF-8 file.encoding
 export LANG=C.UTF-8
 
