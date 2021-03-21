@@ -15,3 +15,5 @@ pmdarima
 mlflow
 zeep
 pyodbc 
+mkdocs
+mkdocs-material
